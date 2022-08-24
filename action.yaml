@@ -59,4 +59,5 @@ runs:
     - name: Publish package
       shell: bash
       run: |
+        touch yarn.lock
         yarn npm publish
