@@ -60,4 +60,5 @@ runs:
       shell: bash
       run: |
         touch yarn.lock
+        yarn install
         yarn npm publish
