@@ -40,7 +40,6 @@ runs:
             npmAlwaysAuth: true
             npmAuthToken: "${{steps.auth.outputs.access_token}}"
         EOF
-        cat .yarnrc.yml
     - name: Install yq
       shell: bash
       run: |
