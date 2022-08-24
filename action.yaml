@@ -24,7 +24,7 @@ runs:
       id: auth
       uses: google-github-actions/auth@v0
       with:
-        credentials_json: ${{serviceAccountKey}}
+        credentials_json: ${{inputs.serviceAccountKey}}
         token_format: access_token
     - name: Generate .yarnrc.yml
       id: meta
@@ -33,9 +33,9 @@ runs:
         cat > .yarnrc.yml <<EOF
         npmScopes:
           ${{inputs.scope}}:
-            npmRegistryServer: https://${{inputs.region}}-npm.pkg.dev/${{project}}/${{repository}}/
+            npmRegistryServer: https://${{inputs.region}}-npm.pkg.dev/${{inputs.project}}/${{inputs.repository}}/
         npmRegistries:
-          //${{inputs.region}}-npm.pkg.dev/${{project}}/${{repository}}/:
+          //${{inputs.region}}-npm.pkg.dev/${{inputs.project}}/${{inputs.repository}}/:
             npmAlwaysAuth: true
             npmAuthToken: "${{steps.auth.outputs.access_token}}"
         EOF
