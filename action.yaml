@@ -58,7 +58,8 @@ runs:
         npx corepack enable
     - name: Publish package
       shell: bash
+      env:
+        YARN_ENABLE_IMMUTABLE_INSTALLS: 'false'
       run: |
-        touch yarn.lock
         yarn install
         yarn npm publish
