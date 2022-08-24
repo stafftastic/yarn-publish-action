@@ -50,8 +50,8 @@ runs:
         yq -io json ".version=\"${GITHUB_REF_NAME#v}\"" package.json
     - name: Set up Node.js
       uses: actions/setup-node@v3
-        with:
-          node-version: 16
+      with:
+        node-version: 16
     - name: Enable Corepack
       shell: bash
       run: |
