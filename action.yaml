@@ -34,7 +34,7 @@ runs:
         cat > .yarnrc.yml <<EOF
         npmScopes:
           ${{inputs.scope}}:
-            npmRegistryServer: https://${{inputs.region}}-npm.pkg.dev/${{inputs.project}}/${{inputs.repository}}/
+            npmPublishRegistry: https://${{inputs.region}}-npm.pkg.dev/${{inputs.project}}/${{inputs.repository}}/
         npmRegistries:
           //${{inputs.region}}-npm.pkg.dev/${{inputs.project}}/${{inputs.repository}}/:
             npmAlwaysAuth: true
