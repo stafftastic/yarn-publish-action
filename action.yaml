@@ -1,0 +1,62 @@
+name: Push Node.js Package
+description: Push Node.js Package to Google Artifact Registry with Yarn
+inputs:
+  scope:
+    description: The Node.js Package Scope
+    required: true
+  project:
+    description: The Google Cloud Platform project to push to
+    required: true
+  repository:
+    description: The repository in Google Artifact Registry to push to
+    required: true
+  region:
+    description: The Google Cloud Platform region where the repository is located
+    required: true
+    default: europe-west3
+  serviceAccountKey:
+    description: The Service Account key to authenticate with Google Artifact Registry
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Authenticate with Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{serviceAccountKey}}
+        token_format: access_token
+    - name: Generate .yarnrc.yml
+      id: meta
+      shell: bash
+      run: |
+        cat > .yarnrc.yml <<EOF
+        npmScopes:
+          ${{inputs.scope}}:
+            npmRegistryServer: https://${{inputs.region}}-npm.pkg.dev/${{project}}/${{repository}}/
+        npmRegistries:
+          //${{inputs.region}}-npm.pkg.dev/${{project}}/${{repository}}/:
+            npmAlwaysAuth: true
+            npmAuthToken: "${{steps.auth.outputs.access_token}}"
+        EOF
+    - name: Install yq
+      shell: bash
+      run: |
+        sudo wget -O /usr/local/bin/yq 'https://github.com/mikefarah/yq/releases/download/v4.27.2/yq_linux_amd64'
+        sudo chmod +x /usr/local/bin/yq
+    - name: Set package version
+      shell: bash
+      run: |
+        yq -io json ".version=\"${GITHUB_REF_NAME#v}\"" package.json
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+        with:
+          node-version: 16
+    - name: Enable Corepack
+      shell: bash
+      run: |
+        npx corepack enable
+    - name: Publish package
+      shell: bash
+      run: |
+        yarn npm publish
