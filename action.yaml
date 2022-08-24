@@ -26,6 +26,7 @@ runs:
       with:
         credentials_json: ${{inputs.serviceAccountKey}}
         token_format: access_token
+        create_credentials_file: false
     - name: Generate .yarnrc.yml
       id: meta
       shell: bash
